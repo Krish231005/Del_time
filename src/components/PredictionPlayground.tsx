@@ -4,7 +4,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import { runClientSidePrediction, generateRawDataset, cleanAndEngineerData } from '../dataGenerator';
+import { generateRawDataset } from '../dataGenerator';
+import { runClientSidePrediction, cleanAndEngineerData } from '../predictorModel';
 import { PredictionInput } from '../types';
 import { 
   Compass, AlertTriangle, CloudSun, Clock, Star, 
