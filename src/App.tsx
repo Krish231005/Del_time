@@ -5,12 +5,10 @@
 
 import { useState } from 'react';
 import { 
-  BarChart3, Play, ChevronRight, Bike, GraduationCap, FileDown, Database
+  BarChart3, Play, ChevronRight, Bike, GraduationCap
 } from 'lucide-react';
 import EdaDashboard from './components/EdaDashboard';
 import PredictionPlayground from './components/PredictionPlayground';
-import { generateRawDataset } from './dataGenerator';
-import { pythonNotebookCells } from './pythonNotebookCode';
 
 type ViewTab = 'predictor' | 'eda';
 
@@ -19,109 +17,8 @@ export default function App() {
 
   const navigationTabs = [
     { id: 'predictor', label: 'Predictor Console', icon: Play, subtitle: 'Interactive Risk Assessment & Presets' },
-    { id: 'eda', label: 'Exploratory Data Analysis (EDA)', icon: BarChart3, subtitle: '10 Interactive SVG Visualizations' }
+    { id: 'eda', label: 'Data Analysis', icon: BarChart3, subtitle: '10 Interactive SVG Visualizations' }
   ];
-
-  // Build and export a fully compliant Jupyter Notebook (.ipynb) JSON file on the fly!
-  const handleExportIpynb = () => {
-    const ipynbCells = pythonNotebookCells.map((cell) => {
-      const sourceLines = cell.content.split('\n').map((line, idx, arr) => 
-        idx === arr.length - 1 ? line : line + '\n'
-      );
-      
-      if (cell.type === 'markdown') {
-        return {
-          cell_type: 'markdown',
-          metadata: {},
-          source: sourceLines,
-        };
-      } else {
-        return {
-          cell_type: 'code',
-          execution_count: cell.executionCount || null,
-          metadata: {},
-          outputs: cell.output ? [
-            {
-              name: 'stdout',
-              output_type: 'stream',
-              text: cell.output.split('\n').map((line, idx, arr) => 
-                idx === arr.length - 1 ? line : line + '\n'
-              ),
-            }
-          ] : [],
-          source: sourceLines,
-        };
-      }
-    });
-
-    const ipynbData = {
-      cells: ipynbCells,
-      metadata: {
-        kernelspec: {
-          display_name: 'Python 3 (ipykernel)',
-          language: 'python',
-          name: 'python3',
-        },
-        language_info: {
-          codemirror_mode: {
-            name: 'ipython',
-            version: 3,
-          },
-          file_extension: '.py',
-          mimetype: 'text/x-python',
-          name: 'python',
-          nbconvert_exporter: 'python',
-          pygments_lexer: 'ipython3',
-          version: '3.10.0',
-        },
-      },
-      nbformat: 4,
-      nbformat_minor: 2,
-    };
-
-    const blob = new Blob([JSON.stringify(ipynbData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'predicting_food_delivery_delays.ipynb';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
-  // Build and export the raw food delivery CSV dataset dynamically
-  const handleDownloadCSV = () => {
-    const rawData = generateRawDataset();
-    if (rawData.length === 0) return;
-    
-    const headers = Object.keys(rawData[0]);
-    const csvRows = [headers.join(',')];
-    
-    for (const row of rawData) {
-      const values = headers.map(header => {
-        const val = row[header as keyof typeof row];
-        const stringVal = val === undefined || val === null ? '' : String(val);
-        // wrap strings with commas in quotes
-        if (stringVal.includes(',') || stringVal.includes('"') || stringVal.includes('\n')) {
-          return `"${stringVal.replace(/"/g, '""')}"`;
-        }
-        return stringVal;
-      });
-      csvRows.push(values.join(','));
-    }
-    
-    const csvContent = csvRows.join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'food_delivery.csv';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
 
   return (
     <div id="app-root-shell" className="min-h-screen bg-gray-50 flex flex-col font-sans select-none antialiased">
@@ -197,35 +94,6 @@ export default function App() {
               );
             })}
           </nav>
-
-          {/* Clean Offline Assets Download Block */}
-          <div className="bg-white border border-gray-200/60 rounded-xl p-4 shadow-sm space-y-3.5">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 block font-sans">
-                Source Files & Datasets
-              </span>
-              <p className="text-[10.5px] text-gray-400 mt-1 leading-relaxed">
-                Download the complete self-contained pipeline, Jupyter workbook code and sample dataset files. No external API required.
-              </p>
-            </div>
-            
-            <div className="space-y-2">
-              <button 
-                onClick={handleDownloadCSV}
-                className="w-full py-2 px-3 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200/50 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
-              >
-                <Database className="h-4 w-4 text-amber-600" />
-                Download csv Dataset
-              </button>
-              <button 
-                onClick={handleExportIpynb}
-                className="w-full py-2 px-3 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200/50 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
-              >
-                <FileDown className="h-4 w-4 text-amber-600" />
-                Export Jupyter Notebook
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* View Switchboard Area */}

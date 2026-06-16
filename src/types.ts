@@ -29,14 +29,6 @@ export interface FoodDeliveryRecord {
   Late: number; // Target: 1 if Time_taken(min) > 45 else 0
 }
 
-export interface NotebookCell {
-  id: string;
-  type: 'markdown' | 'code';
-  content: string;
-  output?: string;
-  executionCount?: number;
-}
-
 export interface ModelMetric {
   name: string;
   accuracy: number;

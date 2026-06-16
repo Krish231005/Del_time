@@ -560,10 +560,10 @@ export default function EdaDashboard() {
         <div className="bg-white p-4 rounded-xl border border-gray-200">
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-1.5 font-sans">
             <BarChart className="h-4 w-4 text-amber-500" />
-            Exploration Catalog
+            Data Analysis Catalog
           </h2>
           <p className="text-xs text-gray-400 leading-relaxed mb-4">
-            Select an exploratory visual from the list below to review interactive breakdowns and business metrics.
+            Select an analytical visual from the list below to review interactive breakdowns and business metrics.
           </p>
           <div className="space-y-1">
             {chartsList.map((chart) => {
