@@ -1,0 +1,6 @@
+{
+  "name": "Food Delivery Delay Predictor",
+  "description": "An interactive Machine Learning study for predicting food delivery delays, containing data exploration, model training, feature importance, and a real-time prediction playground.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
